@@ -1,0 +1,6 @@
+{
+  "name": "NayePankh Volunteers",
+  "description": "Volunteer registration and management system for NayePankh Foundation, featuring secure registration, ID verification, Admin Dashboard with statistics, and an AI chat assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

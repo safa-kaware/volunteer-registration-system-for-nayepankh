@@ -1,0 +1,85 @@
+{
+  "entities": {
+    "volunteer": {
+      "title": "Volunteer",
+      "description": "Information about a volunteer registration",
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string",
+          "description": "The full name of the volunteer"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact number"
+        },
+        "city": {
+          "type": "string",
+          "description": "City of residence"
+        },
+        "preferredCauses": {
+          "type": "array",
+          "description": "Selected causes for volunteering"
+        },
+        "skills": {
+          "type": "array",
+          "description": "Volunteer's technical/social skills"
+        },
+        "availability": {
+          "type": "array",
+          "description": "Volunteer availability times"
+        },
+        "govIdName": {
+          "type": "string",
+          "description": "File name of Government ID"
+        },
+        "govIdData": {
+          "type": "string",
+          "description": "Base64 encoded (and encrypted) Government ID file data"
+        },
+        "encrypted": {
+          "type": "boolean",
+          "description": "Flag indicating if the sensitive fields are client-side encrypted"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the registration was submitted"
+        }
+      },
+      "required": ["fullName", "email", "phone", "city", "preferredCauses", "skills", "availability"]
+    },
+    "admin": {
+      "title": "Admin",
+      "description": "NGO Admin details for authorized dashboard access",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Admin email address"
+        },
+        "role": {
+          "type": "string",
+          "description": "Admin role description"
+        }
+      },
+      "required": ["email"]
+    }
+  },
+  "firestore": {
+    "/volunteers/{volunteerId}": {
+      "schema": "volunteer",
+      "description": "Main collection for storing volunteer registrations"
+    },
+    "/admins/{adminId}": {
+      "schema": "admin",
+      "description": "Explicit list of UID-linked administrative accounts"
+    }
+  }
+}

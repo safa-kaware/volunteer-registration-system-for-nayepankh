@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny-all safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Security Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email == "kawaresafa143@gmail.com" && request.auth.token.email_verified == true)
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Entity-specific validation helper for Volunteers
+    function isValidVolunteer(data) {
+      return data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 128
+        && data.email is string && data.email.size() >= 5 && data.email.size() <= 256
+        && data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 128
+        && data.city is string && data.city.size() >= 2 && data.city.size() <= 128
+        && data.preferredCauses is list && data.preferredCauses.size() >= 1 && data.preferredCauses.size() <= 10 && data.preferredCauses[0] is string
+        && data.skills is list && data.skills.size() >= 1 && data.skills.size() <= 10 && data.skills[0] is string
+        && data.availability is list && data.availability.size() >= 1 && data.availability.size() <= 10 && data.availability[0] is string
+        && (!('govIdName' in data) || (data.govIdName is string && data.govIdName.size() <= 256))
+        && (!('govIdData' in data) || (data.govIdData is string && data.govIdData.size() <= 5000000))
+        && (!('encrypted' in data) || (data.encrypted is bool))
+        && (!('status' in data) || (data.status is string && data.status.size() <= 64));
+    }
+
+    // Entity-specific validation helper for Admins
+    function isValidAdmin(data) {
+      return data.email is string && data.email.size() >= 5 && data.email.size() <= 128
+        && (!('role' in data) || (data.role is string && data.role.size() <= 128));
+    }
+
+    // Match rules for Volunteers collection
+    match /volunteers/{volunteerId} {
+      allow create: if isValidId(volunteerId)
+        && isValidVolunteer(incoming())
+        && request.time == incoming().createdAt;
+
+      // Only registered admins can query, read, update, or delete volunteer records
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Match rules for Admins collection
+    match /admins/{adminId} {
+      // Admins are viewable by authenticated users trying to resolve their admin state,
+      // and fully managed by other verified admins.
+      allow read: if isSignedIn();
+      allow write: if isAdmin() && isValidId(adminId) && isValidAdmin(incoming());
+    }
+  }
+}
