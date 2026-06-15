@@ -42,6 +42,10 @@
           "type": "string",
           "description": "Base64 encoded (and encrypted) Government ID file data"
         },
+        "whyVolunteer": {
+          "type": "string",
+          "description": "Motivation explaining why they want to become a volunteer"
+        },
         "encrypted": {
           "type": "boolean",
           "description": "Flag indicating if the sensitive fields are client-side encrypted"

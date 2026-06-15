@@ -1064,6 +1064,14 @@ export default function AdminDashboard({
                       </p>
                     </div>
                   </div>
+
+                  {/* Motivation Description Box */}
+                  <div className="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1.5">
+                    <span className="text-[9px] text-slate-400 font-mono font-bold block uppercase">Motivation & Skills Alignment Statement</span>
+                    <p className="text-xs text-slate-700 dark:text-slate-350 leading-relaxed font-semibold whitespace-pre-wrap">
+                      "{activeVolunteer.whyVolunteer || "No motivation explanation provided during registration."}"
+                    </p>
+                  </div>
                 </div>
 
                 {/* Training completion path bento logs */}

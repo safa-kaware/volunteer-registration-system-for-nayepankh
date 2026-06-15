@@ -9,6 +9,7 @@ export interface Volunteer {
   availability: string[];
   govIdName?: string; // Sensitive PII
   govIdData?: string; // Sensitive Base64 PII
+  whyVolunteer?: string; // Motivation explanation why they want to volunteer
   encrypted?: boolean; // Flag if fields are client-side encrypted
   createdAt: string; // ISO string or Server Timestamp representation
   status?: 'pending' | 'approved' | 'observation' | 'rejected'; // Administrative workflow status

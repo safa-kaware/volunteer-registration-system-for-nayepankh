@@ -42,6 +42,7 @@ service cloud.firestore {
         && data.availability is list && data.availability.size() >= 1 && data.availability.size() <= 10 && data.availability[0] is string
         && (!('govIdName' in data) || (data.govIdName is string && data.govIdName.size() <= 256))
         && (!('govIdData' in data) || (data.govIdData is string && data.govIdData.size() <= 5000000))
+        && (!('whyVolunteer' in data) || (data.whyVolunteer is string && data.whyVolunteer.size() <= 5000))
         && (!('encrypted' in data) || (data.encrypted is bool))
         && (!('status' in data) || (data.status is string && data.status.size() <= 64));
     }

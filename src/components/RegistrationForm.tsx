@@ -17,6 +17,7 @@ export default function RegistrationForm() {
   const [preferredCauses, setPreferredCauses] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [availability, setAvailability] = useState<string[]>([]);
+  const [whyVolunteer, setWhyVolunteer] = useState('');
   
   // File Upload State
   const [govIdName, setGovIdName] = useState('');
@@ -142,6 +143,10 @@ export default function RegistrationForm() {
       errors.availability = 'Please indicate your availability.';
     }
 
+    if (!whyVolunteer || whyVolunteer.trim().length < 10) {
+      errors.whyVolunteer = 'Please share your motivation or skills alignment in at least 10 characters.';
+    }
+
     if (!govIdData || !govIdName) {
       errors.govId = 'Government ID proof document is required and must be compulsory uploaded for onboarding security.';
     }
@@ -178,6 +183,7 @@ export default function RegistrationForm() {
         preferredCauses,
         skills,
         availability,
+        whyVolunteer: whyVolunteer.trim(),
         encrypted: true,           // Flag verifying cryptographic ciphering is complete
         createdAt: serverTimestamp(), // Utilize Firestore serverTimestamp to match request.time strictly
         status: 'observation'      // Initial state under admin observation before approval
@@ -206,6 +212,7 @@ export default function RegistrationForm() {
       setPreferredCauses([]);
       setSkills([]);
       setAvailability([]);
+      setWhyVolunteer('');
       setGovIdName('');
       setGovIdData('');
 
@@ -449,6 +456,29 @@ export default function RegistrationForm() {
             )}
           </div>
 
+        </div>
+
+        {/* Motivation whyVolunteer input */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+            Why do you want to become a volunteer? <span className="text-teal-500 font-bold">*</span>
+          </label>
+          <textarea
+            required
+            rows={3}
+            placeholder="Tell us about your background, skills, or why you want to join NayePankh - this helps project leads align you to matched roles."
+            value={whyVolunteer}
+            onChange={(e) => {
+              setWhyVolunteer(e.target.value);
+              setValidationErrors(prev => ({ ...prev, whyVolunteer: '' }));
+            }}
+            className={`w-full px-3 py-2 bg-slate-50 border ${
+              validationErrors.whyVolunteer ? 'border-red-500 ring-2 ring-red-500/10' : 'border-slate-200 focus:border-teal-500'
+            } rounded-lg text-sm outline-none transition-all placeholder:text-slate-400 focus:bg-white resize-none`}
+          />
+          {validationErrors.whyVolunteer && (
+            <p className="text-[10px] text-red-500 mt-0.5 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {validationErrors.whyVolunteer}</p>
+          )}
         </div>
 
         {/* Drag and Drop File Upload for Government ID */}
